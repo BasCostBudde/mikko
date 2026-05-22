@@ -32,17 +32,18 @@ class App
             $filename = $this->parameter->get('1');
         }
         if ($this->filesystem->exists($filename)) {
-            $this->messages[] = "$filename already exists.\n";
+            $this->messages[] = "$filename already exists.";
             return(1);
         }
         if (!$this->filesystem->creatable($filename)) {
-            $this->messages[] = "$filename cannot be created.\n";
+            $this->messages[] = "$filename cannot be created.";
             return(1);
         }
         $out = $this->schedule->get($date);        
         if ($this->filesystem->write($filename, $this->formatter->format($out))) {
             return 0;
         }
+        $this->messages[] = "Could not write to $filename. Disk full?";
         return 1;
     }
 

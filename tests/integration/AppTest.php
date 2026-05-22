@@ -37,6 +37,7 @@ class AppTest extends TestCase
         $app = new App($filesystem, $parameter, $formatter, $schedule);
         $status = $app->process(date('Y-m-d'));
         $this->assertEquals(1, $status, 'Should signal failure');
+        $this->assertContains('out.csv already exists.', $app->messages(), implode(' -- ', $app->messages()));
     }
 
     public function test_stops_if_not_writable(): void
@@ -50,6 +51,7 @@ class AppTest extends TestCase
         $app = new App($filesystem, $parameter, $formatter, $schedule);
         $status = $app->process(date('Y-m-d'));
         $this->assertEquals(1, $status, 'Should signal failure');
+        $this->assertContains('out.csv cannot be created.', $app->messages(), implode(' -- ', $app->messages()));
     }
 
     public function test_stops_on_write_failure(): void
@@ -63,6 +65,7 @@ class AppTest extends TestCase
         $app = new App($filesystem, $parameter, $formatter, $schedule);
         $status = $app->process(date('Y-m-d'));
         $this->assertEquals(1, $status, 'Should signal failure');
+        $this->assertContains('Could not write to out.csv. Disk full?', $app->messages(), implode(' -- ', $app->messages()));
     }
 
     public function test_writes_schedule_to_default_file(): void
