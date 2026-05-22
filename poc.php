@@ -15,14 +15,16 @@ if (!touch($filename)) {
 $remaining_months = range(date('m'), 12);
 $out = array_map(
     function ($month) {
-        $month_date = strtotime(date('Y') .'-'. $month .'-15');
-        $month_name = date('F', $month_date);
-        $paydate = strtotime('last day of this month', $month_date);
-        $bonuspaydate = $month_date;
+        $bonuspaydate = strtotime(date('Y') .'-'. $month .'-15');
+        $monthname = date('F', $bonuspaydate);
+        $paydate = strtotime('last day of this month', $bonuspaydate);
+        if (in_array(date('w', $paydate), [0, 6])) {
+            $paydate = strtotime('last friday', $paydate);
+        }
         if (in_array(date('w', $bonuspaydate), [0, 6])) {
             $bonuspaydate = strtotime('next wednesday', $bonuspaydate);
         }
-        return [$month_name, date('Y-m-d', $paydate), date('Y-m-d', $bonuspaydate)];
+        return [$monthname, date('Y-m-d', $paydate), date('Y-m-d', $bonuspaydate)];
     }, $remaining_months
 );
 $fh = fopen($filename, 'w');
