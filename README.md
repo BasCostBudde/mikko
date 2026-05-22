@@ -4,7 +4,7 @@
 - checkout this repository
 - run `composer install`
 - run the app via the command line using
-  php main.php [output-filename]
+  `php main.php [output-filename]`
 
 ## Requirements
 The assignment document states this:
