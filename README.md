@@ -28,3 +28,13 @@ poc.php runs from the command line, takes one parameter as a filename and tries 
 - if there is no parameter, the script assumes that "out.csv" was meant
 - if a file cannot be created at the location, the script tells you and exits with status 1
 - if a file with that name already exists, the script tells you and exits with status 1
+
+For this proof of concept there is already a swathe of assumptions.
+- date format in the output. I assume yyyy-mm-dd.
+- locale to use. I assume system.
+- whether to include the bonus date if the current date is past the 15th of the month. I assume yes.
+- csv parameters to use (separator, quotes, escaping). I assume system.
+- whether to include a headers row. I assume no.
+
+I found the second requirement to be incomplete: if the last day of the month is a weekend day, no action is specified.
+ While I believe most companies would choose the *next* work day, I choose the day *before* that weekend.
