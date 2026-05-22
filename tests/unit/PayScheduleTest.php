@@ -38,11 +38,25 @@ class PayScheduleTest extends TestCase
     {
         $sut = new PaySchedule();
         $actual = $sut->get('2020-01-01');
-        // february 2020 happens to end in week day
+        $this->assertSame('2020-01-31', $actual[0][1]);
+    }
+
+    public function test_payday_is_friday_when_month_ends_in_weekend()
+    {
+        $sut = new PaySchedule();
+        $actual = $sut->get('2020-01-01');
+        // february 2020 happens to end in weekend
         $this->assertSame('2020-02-28', $actual[1][1]);
     }
 
-    public function test_third_field_is_payday()
+    public function test_third_field_is_bonusday()
+    {
+        $sut = new PaySchedule();
+        $actual = $sut->get('2020-01-01');
+        $this->assertSame('2020-01-15', $actual[0][2]);
+    }
+
+    public function test_bonusday_is_next_wednesday_if_15_is_weekend()
     {
         $sut = new PaySchedule();
         $actual = $sut->get('2020-01-01');
