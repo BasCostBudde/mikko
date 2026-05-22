@@ -22,6 +22,8 @@ whatever suits you best.
 
 ## Approach
 
+This project runs php 7.4
+
 ### Proof of Concept
 First I create a minimal-effort script to see what the output could look like. 
 
