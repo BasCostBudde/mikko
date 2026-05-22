@@ -1,0 +1,31 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Method App\\App\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/App.php
+
+		-
+			message: '#^Property App\\App\:\:\$messages type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/App.php
+
+		-
+			message: '#^Method App\\CsvFormatter\:\:format\(\) has parameter \$input with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/CsvFormatter.php
+
+		-
+			message: '#^Method App\\CsvFormatter\:\:str_putcsv\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/CsvFormatter.php
+
+		-
+			message: '#^Method App\\Formatter\:\:format\(\) has parameter \$input with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Formatter.php

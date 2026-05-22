@@ -5,6 +5,14 @@ namespace App;
 class TerminalParameter implements Parameter
 {
 
+    /**
+     * @var array<string> $values
+     */
+    private array $values = [];
+
+    /**
+     * @param array<string> $values
+     */
     public function __construct(array $values = [])
     {
         $this->values = $values;

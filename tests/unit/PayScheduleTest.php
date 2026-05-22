@@ -6,42 +6,42 @@ use App\PaySchedule;
 class PayScheduleTest extends TestCase
 {
 
-    public function test_has_twelve_rows_for_full_year()
+    public function test_has_twelve_rows_for_full_year(): void
     {
         $sut = new PaySchedule();
         $actual = $sut->get('2020-01-01');
         $this->assertCount(12, $actual);
     }
 
-    public function test_has_seven_rows_from_june()
+    public function test_has_seven_rows_from_june(): void
     {
         $sut = new PaySchedule();
         $actual = $sut->get('2020-06-01');
         $this->assertCount(7, $actual);
     }
 
-    public function test_row_has_three_fields()
+    public function test_row_has_three_fields(): void
     {
         $sut = new PaySchedule();
         $actual = $sut->get('2020-01-01');
         $this->assertCount(3, $actual[1]);
     }
 
-    public function test_first_field_is_month_name()
+    public function test_first_field_is_month_name(): void
     {
         $sut = new PaySchedule();
         $actual = $sut->get('2020-01-01');
         $this->assertSame('February', $actual[1][0]);
     }
 
-    public function test_second_field_is_payday()
+    public function test_second_field_is_payday(): void
     {
         $sut = new PaySchedule();
         $actual = $sut->get('2020-01-01');
         $this->assertSame('2020-01-31', $actual[0][1]);
     }
 
-    public function test_payday_is_friday_when_month_ends_in_weekend()
+    public function test_payday_is_friday_when_month_ends_in_weekend(): void
     {
         $sut = new PaySchedule();
         $actual = $sut->get('2020-01-01');
@@ -49,14 +49,14 @@ class PayScheduleTest extends TestCase
         $this->assertSame('2020-02-28', $actual[1][1]);
     }
 
-    public function test_third_field_is_bonusday()
+    public function test_third_field_is_bonusday(): void
     {
         $sut = new PaySchedule();
         $actual = $sut->get('2020-01-01');
         $this->assertSame('2020-01-15', $actual[0][2]);
     }
 
-    public function test_bonusday_is_next_wednesday_if_15_is_weekend()
+    public function test_bonusday_is_next_wednesday_if_15_is_weekend(): void
     {
         $sut = new PaySchedule();
         $actual = $sut->get('2020-01-01');

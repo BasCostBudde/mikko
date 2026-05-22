@@ -10,7 +10,7 @@ class CsvFormatter implements Formatter
         return $this->str_putcsv($input);
     }
 
-    private function str_putcsv($data)
+    private function str_putcsv(array $data): string
     {
         $fh = fopen('php://temp', 'rw');
         foreach ($data as $row) {

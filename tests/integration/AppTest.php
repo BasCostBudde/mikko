@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 class AppTest extends TestCase
 {
 
-    public function test_sample_output_works_only_may_2026()
+    public function test_sample_output_works_only_may_2026(): void
     {
         if (file_exists('out.csv')) {
             unlink('out.csv');
@@ -26,7 +26,7 @@ class AppTest extends TestCase
     }
 
     // dit is alweer unit-test-achtig.
-    public function test_will_not_overwrite_existing_file()
+    public function test_will_not_overwrite_existing_file(): void
     {
         $filesystem = $this->createMock(FileSystem::class);
         $filesystem->method('exists')->willReturn(true);
@@ -39,7 +39,7 @@ class AppTest extends TestCase
         $this->assertEquals(1, $status, 'Should signal failure');
     }
 
-    public function test_stops_if_not_writable()
+    public function test_stops_if_not_writable(): void
     {
         $filesystem = $this->createMock(FileSystem::class);
         $filesystem->method('creatable')->willReturn(false);
@@ -52,7 +52,7 @@ class AppTest extends TestCase
         $this->assertEquals(1, $status, 'Should signal failure');
     }
 
-    public function test_stops_on_write_failure()
+    public function test_stops_on_write_failure(): void
     {
         $filesystem = $this->createMock(FileSystem::class);
         $filesystem->method('creatable')->willReturn(true);
@@ -65,7 +65,7 @@ class AppTest extends TestCase
         $this->assertEquals(1, $status, 'Should signal failure');
     }
 
-    public function test_writes_schedule_to_default_file()
+    public function test_writes_schedule_to_default_file(): void
     {
         $filesystem = $this->createMock(FileSystem::class);
         $filesystem->method('creatable')->willReturn(true);
@@ -81,7 +81,7 @@ class AppTest extends TestCase
         $this->assertEquals(0, $status, 'Should not signal failure');
     }
 
-    public function test_writes_schedule_to_specified_file()
+    public function test_writes_schedule_to_specified_file(): void
     {
         $filesystem = $this->createMock(FileSystem::class);
         $filesystem->method('creatable')->willReturn(true);
@@ -98,7 +98,7 @@ class AppTest extends TestCase
         $this->assertEquals(0, $status, 'Should not signal failure');
     }
 
-    private function expected()
+    private function expected(): string
     {
         return <<<TXT
 May,2026-05-29,2026-05-15

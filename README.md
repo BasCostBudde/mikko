@@ -1,6 +1,7 @@
 # Mikko test
 
 ## Installation
+- this project runs under php 7.4
 - checkout this repository
 - run `composer install`
 - run the app via the command line using

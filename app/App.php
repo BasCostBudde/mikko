@@ -6,12 +6,12 @@ class App
 {
 
     // NOTE dit wordt in php8 een stuk korter :)
-    private $filesystem;
-    private $parameter;
-    private $formatter;
-    private $schedule;
+    private FileSystem $filesystem;
+    private Parameter $parameter;
+    private Formatter $formatter;
+    private PaySchedule $schedule;
 
-    private $messages = [];
+    private array $messages = [];
 
     public function __construct(
         FileSystem $filesystem,
@@ -25,7 +25,7 @@ class App
         $this->schedule = $schedule;
     }
 
-    public function process($date)
+    public function process(string $date): int
     {
         $filename = 'out.csv';
         if ($this->parameter->get('1')) {
@@ -46,7 +46,7 @@ class App
         return 1;
     }
 
-    public function messages()
+    public function messages(): array
     {
         return $this->messages;
     }

@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 class PocTest extends TestCase
 {
 
-    public function test_works_only_may_2026()
+    public function test_works_only_may_2026(): void
     {
         if (file_exists('out.csv')) {
             unlink('out.csv');
@@ -16,7 +16,7 @@ class PocTest extends TestCase
         $this->assertEquals($this->expected(), $actual);
     }
 
-    private function expected()
+    private function expected(): string
     {
         return <<<TXT
 May,2026-05-29,2026-05-15
