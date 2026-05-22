@@ -1,0 +1,20 @@
+{
+    "name": "bas/mikko",
+    "description": "Assessment",
+    "type": "project",
+    "require-dev": {
+        "phpunit/phpunit": "^9.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bas\\Mikko\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Bas Cost Budde",
+            "email": "bas@heuveltop.nl"
+        }
+    ],
+    "require": {}
+}
