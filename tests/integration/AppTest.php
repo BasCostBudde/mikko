@@ -1,24 +1,101 @@
 <?php
 
+// dit hoort niet zo natuurlijk, maar het scheelt me een bak use-statements
+namespace App;
+
 use PHPUnit\Framework\TestCase;
 
 class AppTest extends TestCase
 {
 
-    public function test_be_quiet()
-    {
-        $this->assertEquals(1, 1);
-    }
-
-    public function no_test_works_only_may_2026()
+    public function test_sample_output_works_only_may_2026()
     {
         if (file_exists('out.csv')) {
             unlink('out.csv');
         }
-        $app = new App();
-        $app->process(date());
+        $filesystem = new ProductionFileSystem();
+        // no parameter, so should write default file
+        $parameter = new TerminalParameter();
+        $formatter = new CsvFormatter();
+        $schedule = new PaySchedule();
+        $app = new App($filesystem, $parameter, $formatter, $schedule);
+        $app->process(date('Y-m-d'));
+        $this->assertTrue(file_exists('out.csv'), 'Did not create file');
         $actual = file_get_contents('out.csv');
         $this->assertEquals($this->expected(), $actual);
+    }
+
+    // dit is alweer unit-test-achtig.
+    public function test_will_not_overwrite_existing_file()
+    {
+        $filesystem = $this->createMock(FileSystem::class);
+        $filesystem->method('exists')->willReturn(true);
+        $filesystem->expects($this->never())->method('write');
+        $parameter = $this->createStub(Parameter::class);
+        $formatter = $this->createStub(Formatter::class);
+        $schedule = $this->createStub(PaySchedule::class);
+        $app = new App($filesystem, $parameter, $formatter, $schedule);
+        $status = $app->process(date('Y-m-d'));
+        $this->assertEquals(1, $status, 'Should signal failure');
+    }
+
+    public function test_stops_if_not_writable()
+    {
+        $filesystem = $this->createMock(FileSystem::class);
+        $filesystem->method('creatable')->willReturn(false);
+        $filesystem->expects($this->never())->method('write');
+        $parameter = $this->createStub(Parameter::class);
+        $formatter = $this->createStub(Formatter::class);
+        $schedule = $this->createStub(PaySchedule::class);
+        $app = new App($filesystem, $parameter, $formatter, $schedule);
+        $status = $app->process(date('Y-m-d'));
+        $this->assertEquals(1, $status, 'Should signal failure');
+    }
+
+    public function test_stops_on_write_failure()
+    {
+        $filesystem = $this->createMock(FileSystem::class);
+        $filesystem->method('creatable')->willReturn(true);
+        $filesystem->expects($this->once())->method('write')->willReturn(false);
+        $parameter = $this->createStub(Parameter::class);
+        $formatter = $this->createStub(Formatter::class);
+        $schedule = $this->createStub(PaySchedule::class);
+        $app = new App($filesystem, $parameter, $formatter, $schedule);
+        $status = $app->process(date('Y-m-d'));
+        $this->assertEquals(1, $status, 'Should signal failure');
+    }
+
+    public function test_writes_schedule_to_default_file()
+    {
+        $filesystem = $this->createMock(FileSystem::class);
+        $filesystem->method('creatable')->willReturn(true);
+        $filesystem->expects($this->once())
+            ->method('write')
+            ->with('out.csv', '')
+            ->willReturn(true);
+        $parameter = $this->createStub(Parameter::class);
+        $formatter = $this->createStub(Formatter::class);
+        $schedule = $this->createStub(PaySchedule::class);
+        $app = new App($filesystem, $parameter, $formatter, $schedule);
+        $status = $app->process(date('Y-m-d'));
+        $this->assertEquals(0, $status, 'Should not signal failure');
+    }
+
+    public function test_writes_schedule_to_specified_file()
+    {
+        $filesystem = $this->createMock(FileSystem::class);
+        $filesystem->method('creatable')->willReturn(true);
+        $filesystem->expects($this->once())
+            ->method('write')
+            ->with('special.csv', '')
+            ->willReturn(true);
+        $parameter = $this->createStub(Parameter::class);
+        $parameter->method('get')->willReturn('special.csv');
+        $formatter = $this->createStub(Formatter::class);
+        $schedule = $this->createStub(PaySchedule::class);
+        $app = new App($filesystem, $parameter, $formatter, $schedule);
+        $status = $app->process(date('Y-m-d'));
+        $this->assertEquals(0, $status, 'Should not signal failure');
     }
 
     private function expected()
