@@ -56,6 +56,7 @@ These requirements specify that a file with certain contents be written. The onl
 Testing this application addresses two concerns of it:
 - does the application create a file?
 - does the created file have the desired contents?
+
 The first concern is an integration issue. The application talks to a file system, which is a boundary. I decide to create an interface for the file system, suited to this application, with a concrete adapter as an implementation. I do not see how to test this adapter, so I postpone this test.
 
 interface FileSystem
@@ -93,3 +94,20 @@ These objects can be test driven. The application bundles them into something th
 $app = new App(new ProductionFileSystem(), new TerminalParameter(), new CsvFormatter(), new PaySchedule());
 $today = date();
 $app->process($today);
+
+## Room for extension
+
+Currently the app produces a schedule for the remainder of the current year only. An input parameter with a starting date could be supplied to produce any payment schedule, something an auditor may ask for.
+
+## Room for Improvement
+
+The app does not test the filename parameter for illegal characters.
+
+The main algorithm reeks of Primitive Obsession, pushing integer timestamps around.
+
+The Formatter likewise, operating on unspecified arrays. I find this difficult to narrow down without further changes in requirements. I could use a value object for the rows of month data, instead of an array.
+
+## Room for Reuse
+
+To reuse the App logic in a browser application, this application must provide Parameter and FileSystem implementations where the write() operation of FileSystem could serve to offer the resulting file via download.
+Alternatively, the browser application simply reuses just the PaySchedule core.
