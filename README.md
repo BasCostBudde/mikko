@@ -22,6 +22,7 @@ whatever suits you best.
 
 ## Approach
 
+### Proof of Concept
 First I create a minimal-effort script to see what the output could look like. 
 
 poc.php runs from the command line, takes one parameter as a filename and tries to write its output to that file name.
@@ -38,3 +39,36 @@ For this proof of concept there is already a swathe of assumptions.
 
 I found the second requirement to be incomplete: if the last day of the month is a weekend day, no action is specified.
  While I believe most companies would choose the *next* work day, I choose the day *before* that weekend.
+
+### Testable design
+Already in creating the simplest script variant I noticed that testing its functionality is painful. Remove the output file, run the script, inspect the file, wading through characters and comparing to an actual calendar.
+
+These requirements specify that a file with certain contents be written. The only explicit input to the application is the destination file name; the current date is an implicit input.
+Testing this application addresses two concerns of it:
+- does the application create a file?
+- does the created file have the desired contents?
+The first concern is an integration issue. The application talks to a file system, which is a boundary. I decide to create an interface for the file system, suited to this application, with a concrete adapter as an implementation. I do not see how to test this adapter, so I postpone this test.
+
+interface FileSystem
+public function exists($filename): bool;
+ # return true if filename exists
+public function creatable($filename): bool;
+ # return true if filename can be created and written to
+public function write($filename, $contents): bool;
+ # return false if something went wrong during writing ("disk full")
+
+The second concern is business logic. The algorithm takes inputs and creates output, which is purely functional. This is easy to test drive.
+The logic does not depend on the file system adapter or vice versa, so I see little value in testing their interaction.
+
+In order for the business logic to be reliably testable, however, the implicit input needs to go. The application will provide a starting date to the logic. Let's call it PaySchedule
+
+class PaySchedule
+public function construct($date);
+public function get(): array;
+
+Finally, the contents of the file are required to be csv. The schedule is just an array. Formatting the array into csv is a separate concern, to be handled by the Formatter interface
+
+interface Formatter
+public function format(array $input): string;
+
+with a concrete implementation CsvFormatter
