@@ -61,11 +61,11 @@ The first concern is an integration issue. The application talks to a file syste
 
 interface FileSystem
 public function exists($filename): bool;
- # return true if filename exists
+ // return true if filename exists
 public function creatable($filename): bool;
- # return true if filename can be created and written to
+ // return true if filename can be created and written to
 public function write($filename, $contents): bool;
- # return false if something went wrong during writing ("disk full")
+ // return false if something went wrong during writing ("disk full")
 
 The second concern is business logic. The algorithm takes inputs and creates output, which is purely functional. This is easy to test drive.
 The logic does not depend on the file system adapter or vice versa, so I see little value in testing their interaction.
