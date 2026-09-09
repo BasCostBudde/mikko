@@ -59,6 +59,7 @@ Testing this application addresses two concerns of it:
 
 The first concern is an integration issue. The application talks to a file system, which is a boundary. I decide to create an interface for the file system, suited to this application, with a concrete adapter as an implementation. I do not see how to test this adapter, so I postpone this test.
 
+```
 interface FileSystem
 public function exists($filename): bool;
  // return true if filename exists
@@ -66,34 +67,43 @@ public function creatable($filename): bool;
  // return true if filename can be created and written to
 public function write($filename, $contents): bool;
  // return false if something went wrong during writing ("disk full")
+```
 
 The second concern is business logic. The algorithm takes inputs and creates output, which is purely functional. This is easy to test drive.
 The logic does not depend on the file system adapter or vice versa, so I see little value in testing their interaction.
 
 In order for the business logic to be reliably testable, however, the implicit input needs to go. The application will provide a starting date to the logic. Let's call it PaySchedule
 
+```
 class PaySchedule
 public function get($date): array;
+```
 
 Furthermore, the contents of the file are required to be csv. The schedule is just an array. Formatting the array into csv is a separate concern, to be handled by the Formatter interface
 
+```
 interface Formatter
 public function format(array $input): string;
+```
 
 with a concrete implementation CsvFormatter.
 
 Then there is the aspect of the output file name parameter. I will bring this into the application via a Parameter interface
 
+```
 interface Parameter
 public function get($name): ?string;
+```
 
 with a TerminalParameter implementation, later to be extended to also provide command line options (like "-y 2024" to make the algorithm start in 2024, or "-f" to overwrite an existing target file instead of refusing operation)
 
 These objects can be test driven. The application bundles them into something that works:
 
+```
 $app = new App(new ProductionFileSystem(), new TerminalParameter(), new CsvFormatter(), new PaySchedule());
 $today = date();
 $app->process($today);
+```
 
 ## Room for extension
 
